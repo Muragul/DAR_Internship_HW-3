@@ -1,21 +1,24 @@
 package com.example.studentlistadvanced
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
+import android.os.Parcelable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
+import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+
 
 class FirstFragment : Fragment(), Adapter.ItemClickListener, Adapter.RemoveItemClickListener {
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: Adapter
     private var studentStack = CustomStack()
+    private var stateBundle: Bundle? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -60,6 +63,21 @@ class FirstFragment : Fragment(), Adapter.ItemClickListener, Adapter.RemoveItemC
         studentStack.push(item)
         StudentList.removeStudent(item)
         adapter.submitList(StudentList.getStudentList())
+    }
+
+    override fun onPause() {
+        super.onPause()
+        stateBundle = Bundle()
+        val listState: Parcelable? = recyclerView.layoutManager?.onSaveInstanceState()
+        stateBundle!!.putParcelable("recycler_state", listState)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        if (stateBundle != null) {
+            val listState: Parcelable? = stateBundle!!.getParcelable("recycler_state")
+            recyclerView.layoutManager?.onRestoreInstanceState(listState)
+        }
     }
 
 }

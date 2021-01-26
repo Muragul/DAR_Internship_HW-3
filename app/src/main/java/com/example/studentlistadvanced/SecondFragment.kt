@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.navigation.fragment.navArgs
+import java.util.*
 
 class SecondFragment : Fragment() {
     private val arguments: SecondFragmentArgs by navArgs()

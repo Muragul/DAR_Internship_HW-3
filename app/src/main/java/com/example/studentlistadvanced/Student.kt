@@ -7,7 +7,7 @@ import java.util.*
 @Parcelize
 data class Student(
     val id: Int,
-    val name: String,
+    val name: String?,
     val surname: String?,
     val grade: Double?,
     val image: String?
@@ -18,13 +18,10 @@ data class Student(
         if (other === this) return true
         if (other !is Student) return false
         val user: Student = other
-//        return user.id == id && user.name == name && user.surname == surname &&
-//                user.grade == grade && user.image == image
         return user.name == name
     }
 
     override fun hashCode(): Int {
-//        return Objects.hash(id, name, surname)
         return Objects.hash(name)
     }
 }
