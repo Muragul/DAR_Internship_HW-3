@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
+import android.widget.Toast
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -14,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView
 class FirstFragment : Fragment(), Adapter.ItemClickListener, Adapter.RemoveItemClickListener {
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: Adapter
+    private var studentStack = CustomStack()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -26,12 +28,20 @@ class FirstFragment : Fragment(), Adapter.ItemClickListener, Adapter.RemoveItemC
         recyclerView.adapter = adapter
         adapter.submitList(StudentList.getStudentList())
 
+        rootView.findViewById<Button>(R.id.restore_button).setOnClickListener {
+            if (!studentStack.empty()) {
+                StudentList.restoreStudent(studentStack.pop())
+                adapter.submitList(StudentList.getStudentList())
+            }
+        }
+
         rootView.findViewById<Button>(R.id.add_student).setOnClickListener {
             val name = rootView.findViewById<EditText>(R.id.student_name_to_add).text.toString()
             if (name != "") {
                 addStudentToList(name)
                 rootView.findViewById<EditText>(R.id.student_name_to_add).text.clear()
-            }
+            } else
+                Toast.makeText(context, "Fill out the data", Toast.LENGTH_SHORT).show()
         }
 
         return rootView
@@ -47,6 +57,7 @@ class FirstFragment : Fragment(), Adapter.ItemClickListener, Adapter.RemoveItemC
     }
 
     override fun itemRemoved(item: Student) {
+        studentStack.push(item)
         StudentList.removeStudent(item)
         adapter.submitList(StudentList.getStudentList())
     }

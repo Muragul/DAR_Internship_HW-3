@@ -14,6 +14,10 @@ object StudentList {
         studentList.add(student)
     }
 
+    fun restoreStudent(student: Student){
+        studentList.add(student)
+    }
+
     fun removeStudent(student: Student) {
         studentList.remove(student)
     }
